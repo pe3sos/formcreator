@@ -9,17 +9,17 @@
 
   -
 
-  II.TIPURI DE UTILIZARE:
+  II.INSTALL:
   -----------------------------
 
   -
 
- III.DOMENII IN CARE ESTE UTIL:
+
  -----------------------------
 
   -
 
- IV.CERINTE:
+ IV.REQUIREMENTS:
  -----------------------------
 
   - Instalare Apache + PHP + Mysql
@@ -30,3 +30,5 @@
  -----------------------------
 
   -
+
+  VI.COPYRIGHT AND LICENSE:
