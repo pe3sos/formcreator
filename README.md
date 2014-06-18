@@ -14,7 +14,7 @@
 
   -
 
-
+  III.OPTIONS
  -----------------------------
 
   -
@@ -22,9 +22,7 @@
  IV.REQUIREMENTS:
  -----------------------------
 
-  - Instalare Apache + PHP + Mysql
-  - Instalare SMStools + conigurare (config regasit in attach)
-  - Telefon Nokia E72 (Ex. de verificat in /dev/ttyACM0))
+  -
 
   V.Future:
  -----------------------------
@@ -32,3 +30,4 @@
   -
 
   VI.COPYRIGHT AND LICENSE:
+   -----------------------------
