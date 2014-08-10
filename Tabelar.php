@@ -5,43 +5,42 @@
  * Autor URI: www.sosa.ro
  * Date: 4:32 PM, 6/18/14
  */
+
 class Tabelar
 {
-	var $sql = '';
-	var $getsql = '';
-	var $where = array();
-	var $wheresql = '';
-	var $limit = '30';
-	var $nr = 1;
+	public $sql = '';
+	public $getsql = '';
+	public $where = [];
+	public $wheresql = '';
+	public $limit = '30';
+	public $nr = 1;
 
-	var $showTable = '';
-	var $tableclass = 'tabelar tclist';
-	var $tableid = '';
-	var $tstyle = '';
-	var $funcbefore = '';
+	public $showTable = '';
+	public $tableclass = 'tabelar tclist';
+	public $tableid = '';
+	public $tstyle = '';
+	public $funcbefore = '';
 
-	var $pagenr = '1';
-	var $page = 'page';
-	var $pagesuf = '&';
-	var $ordonare = '';
-	var $grupare = '';
-	var $clase = array();
-	var $fnclass = '';
-	var $trattr = '';
-	var $filtre = array();
-	var $cautare = array();
-	var $fcautare = array();
-	var $campuri = array();
-	var $fcampuri = array();
-	var $captabel = array();
-	var $hideColumns = array();
-	var $link = '';
-	var $appendtr = '';
-	var $theads = '';
-	var $tbodys = '';
-	var $debug = '0';
-	var $showtheads = false;
-
+	public $pagenr = '1';
+	public $page = 'page';
+	public $pagesuf = '&';
+	public $ordonare = '';
+	public $grupare = '';
+	public $clase = [];
+	public $fnclass = '';
+	public $trattr = '';
+	public $filtre = [];
+	public $cautare = [];
+	public $fcautare = [];
+	public $campuri = [];
+	public $fcampuri = [];
+	public $captabel = [];
+	public $hideColumns = [];
+	public $appendtr = '';
+	public $theads = '';
+	public $tbodys = '';
+	public $debug = '0';
+	public $showtheads = false;
 
 	public function __construct()
 	{
@@ -51,11 +50,10 @@ class Tabelar
 
 	public function sql($sql)
 	{
-		$this->sql = $sql;
-		return $this->sql;
+		return $this->sql = $sql;
 	}
 
-	private function getsql()
+	private function getSql()
 	{
 		$this->getsql = $this->sql . $this->getwhere() . $this->getGrupare() . $this->getOrdonare() . $this->getLimit();
 		return $this->getsql;
@@ -63,11 +61,10 @@ class Tabelar
 
 	public function showsql()
 	{
-
-		echo $this->getsql();
+		echo $this->getSql();
 	}
 
-	public function GetTotalRows()
+	public function getTotalRows()
 	{
 		$grupcnt = $this->getGrupare();
 		//$grupcnt .= isset($grupcnt{3})?' with rollup':'';
@@ -79,7 +76,7 @@ class Tabelar
 		if ($this->db->GetRecord())
 		{
 			$randuri = $this->db->Record[0];
-		};
+		}
 		return $randuri;
 	}
 
@@ -124,7 +121,7 @@ class Tabelar
 		return $this->fcautare;
 	}
 
-	private function getwhere()
+	private function getWhere()
 	{
 		$sql = $this->wheresql;
 		return $sql;
@@ -179,7 +176,7 @@ class Tabelar
 		$this->link = $link;
 	}
 
-	public function getlink()
+	public function getLink()
 	{
 		return $this->link;
 	}
@@ -230,7 +227,7 @@ class Tabelar
 		return $filter;
 	}
 
-	public function iscautare()
+	public function isCautare()
 	{
 		foreach ($this->filtre as $f)
 		{
@@ -242,7 +239,7 @@ class Tabelar
 		return false;
 	}
 
-	public function getpaginator()
+	public function getPaginator()
 	{
 		$randuri = $this->GetTotalRows();
 		if ($randuri > $this->limit)
@@ -257,12 +254,12 @@ class Tabelar
 		}
 	}
 
-	public function setrclass($fnclass)
+	public function setRowClass($fnclass)
 	{
 		$this->fnclass = $fnclass;
 	}
 
-	public function trbefore($func = '')
+	public function trBefore($func = '')
 	{
 		if (isset($func{0}) && function_exists($func))
 		{
@@ -295,6 +292,10 @@ class Tabelar
 					if (isset($this->fcampuri[$k]) && function_exists($this->fcampuri[$k]))
 					{
 						$data = $this->fcampuri[$k]($db->Record, $this, $k);
+					}
+					elseif (isset($this->fcampuri[$k]) && method_exists($this, $this->fcampuri[$k]))
+					{
+						$data = $this->{$this->fcampuri[$k]}($db->Record, $this, $k);
 					}
 					elseif (isset($db->Record[$camp]))
 					{
@@ -339,13 +340,12 @@ class Tabelar
 			$this->theads = $txt;
 		}
 
-		$text = '<thead> <tr> ' . $this->theads . ' </tr></thead>';
+		$text = '<thead><tr>' . $this->theads . '</tr></thead>';
 		return $text;
 	}
 
 	public function getTable()
 	{
-
 		$this->showTable = '<table class="' . $this->tableclass . '" id="' . $this->tableid . '" style="' . $this->tstyle . '">';
 		$this->showTable .= $this->getThead();
 		$this->showTable .= '<tbody>' . $this->tbodys . $this->appendtr . '</tbody>';
@@ -354,24 +354,26 @@ class Tabelar
 		return $this->showTable;
 	}
 
-	public function append($data)
+	public function appendRow($data)
 	{
 		return $this->appendtr .= $data;
 	}
 
-	public function get_showTable()
+	public function getShowTable()
 	{
 		echo $this->GetCautare();
-		echo $this->getpaginator();
+		echo $this->getPaginator();
 		echo $this->getTable();
-		echo $this->getpaginator();
+		echo $this->getPaginator();
 	}
 
 	public function showTable()
 	{
 		echo $this->get_showTable();
 	}
+	
+	public function tb_nr($d, $t, $k)
+	{
+		return $this->nr++; 
+	}
 }
-
-
-?>
