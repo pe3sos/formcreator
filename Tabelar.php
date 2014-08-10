@@ -67,7 +67,7 @@ class Tabelar
 		echo $this->getsql();
 	}
 
-	function GetTotalRows()
+	public function GetTotalRows()
 	{
 		$grupcnt = $this->getGrupare();
 		//$grupcnt .= isset($grupcnt{3})?' with rollup':'';
@@ -83,7 +83,7 @@ class Tabelar
 		return $randuri;
 	}
 
-	function cautare($id, $arr, $sep, $titlu)
+	public function cautare($id, $arr, $sep, $titlu)
 	{
 		$this->cautare = array($id => $titlu);
 
@@ -113,12 +113,12 @@ class Tabelar
 		$this->wheresql = join('', $sql);
 	}
 
-	function hideColumns($hideColumns)
+	public function hideColumns($hideColumns)
 	{
 		$this->hideColumns = is_array($hideColumns) ? $hideColumns : array($hideColumns);
 	}
 
-	function fcautare($arr)
+	public function fcautare($arr)
 	{
 		$this->fcautare = $this->fcautare + $arr;
 		return $this->fcautare;
@@ -136,7 +136,7 @@ class Tabelar
 		return $this->grupare;
 	}
 
-	function getGrupare()
+	public function getGrupare()
 	{
 		return $this->grupare;
 	}
@@ -147,12 +147,12 @@ class Tabelar
 		return $this->ordonare;
 	}
 
-	function getOrdonare()
+	public function getOrdonare()
 	{
 		return $this->ordonare;
 	}
 
-	function setClass($clase)
+	public function setClass($clase)
 	{
 		$this->clase = $clase + $this->clase;
 		return $this->clase;
@@ -173,18 +173,18 @@ class Tabelar
 		return $sql;
 	}
 
-	function  link($link)
+	public function link($link)
 	{
 		$this->pagesuf = '&';
 		$this->link = $link;
 	}
 
-	function getlink()
+	public function getlink()
 	{
 		return $this->link;
 	}
 
-	function campuri($arr)
+	public function campuri($arr)
 	{
 		if (!isset($arr['-1']{0}))
 		{
@@ -197,18 +197,18 @@ class Tabelar
 		return $this->campuri;
 	}
 
-	function fcampuri($arr)
+	public function fcampuri($arr)
 	{
 		$this->fcampuri = $this->fcampuri + $arr;
 	}
 
-	function capTabel($captabel)
+	public function capTabel($captabel)
 	{
 		$this->captabel = $this->captabel + $captabel;
 		return $this->captabel;
 	}
 
-	function getCautare()
+	public function getCautare()
 	{
 		$filter = '';
 		if (count($this->filtre) > 0)
@@ -230,7 +230,7 @@ class Tabelar
 		return $filter;
 	}
 
-	function iscautare()
+	public function iscautare()
 	{
 		foreach ($this->filtre as $f)
 		{
@@ -242,8 +242,7 @@ class Tabelar
 		return false;
 	}
 
-
-	function getpaginator()
+	public function getpaginator()
 	{
 		$randuri = $this->GetTotalRows();
 		if ($randuri > $this->limit)
@@ -258,12 +257,12 @@ class Tabelar
 		}
 	}
 
-	function setrclass($fnclass)
+	public function setrclass($fnclass)
 	{
 		$this->fnclass = $fnclass;
 	}
 
-	function trbefore($func = '')
+	public function trbefore($func = '')
 	{
 		if (isset($func{0}) && function_exists($func))
 		{
@@ -321,7 +320,7 @@ class Tabelar
 		// return $sql;
 	}
 
-	function getThead()
+	public function getThead()
 	{
 		if (!isset($this->theads{1}) && $this->showtheads)
 		{
@@ -344,7 +343,7 @@ class Tabelar
 		return $text;
 	}
 
-	function getTable()
+	public function getTable()
 	{
 
 		$this->showTable = '<table class="' . $this->tableclass . '" id="' . $this->tableid . '" style="' . $this->tstyle . '">';
@@ -355,12 +354,12 @@ class Tabelar
 		return $this->showTable;
 	}
 
-	function append($data)
+	public function append($data)
 	{
 		return $this->appendtr .= $data;
 	}
 
-	function get_showTable()
+	public function get_showTable()
 	{
 		echo $this->GetCautare();
 		echo $this->getpaginator();
@@ -368,7 +367,7 @@ class Tabelar
 		echo $this->getpaginator();
 	}
 
-	function showTable()
+	public function showTable()
 	{
 		echo $this->get_showTable();
 	}
