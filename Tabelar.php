@@ -5,7 +5,6 @@
  * Autor URI: www.sosa.ro
  * Date: 4:32 PM, 6/18/14
  */
-
 class Tabelar
 {
 	public $sql = '';
@@ -56,6 +55,7 @@ class Tabelar
 	private function getSql()
 	{
 		$this->getsql = $this->sql . $this->getwhere() . $this->getGrupare() . $this->getOrdonare() . $this->getLimit();
+
 		return $this->getsql;
 	}
 
@@ -67,7 +67,7 @@ class Tabelar
 	public function getTotalRows()
 	{
 		$grupcnt = $this->getGrupare();
-		//$grupcnt .= isset($grupcnt{3})?' with rollup':'';
+
 		$sqlr = $this->sql . $this->getwhere() . $grupcnt;
 		$sqlr = str_replace("\r\n", ' ', $sqlr);
 
@@ -77,6 +77,7 @@ class Tabelar
 		{
 			$randuri = $this->db->Record[0];
 		}
+
 		return $randuri;
 	}
 
@@ -118,12 +119,14 @@ class Tabelar
 	public function fcautare($arr)
 	{
 		$this->fcautare = $this->fcautare + $arr;
+
 		return $this->fcautare;
 	}
 
 	private function getWhere()
 	{
 		$sql = $this->wheresql;
+
 		return $sql;
 	}
 
@@ -141,6 +144,7 @@ class Tabelar
 	public function ordonare($ordonare)
 	{
 		$this->ordonare = ' order by ' . join(',', $ordonare);
+
 		return $this->ordonare;
 	}
 
@@ -152,6 +156,7 @@ class Tabelar
 	public function setClass($clase)
 	{
 		$this->clase = $clase + $this->clase;
+
 		return $this->clase;
 	}
 
@@ -159,6 +164,7 @@ class Tabelar
 	{
 		$this->limit = $limit;
 		$this->pagenr = $page;
+
 		return $this->limit;
 	}
 
@@ -167,6 +173,7 @@ class Tabelar
 		$this->pagenr = isset($_GET[$this->page]) ? $_GET[$this->page] : 1;
 		$sql = ' limit ' . $this->limit * ($this->pagenr - 1) . ', ' . $this->limit;
 		$this->nr = $this->limit * ($this->pagenr - 1) + 1;
+
 		return $sql;
 	}
 
@@ -191,6 +198,7 @@ class Tabelar
 			$this->clase = array('-1' => 'c');
 		}
 		$this->campuri = $this->campuri + $arr;
+
 		return $this->campuri;
 	}
 
@@ -202,6 +210,7 @@ class Tabelar
 	public function capTabel($captabel)
 	{
 		$this->captabel = $this->captabel + $captabel;
+
 		return $this->captabel;
 	}
 
@@ -236,6 +245,7 @@ class Tabelar
 				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -277,6 +287,11 @@ class Tabelar
 		$nr = $this->nr;
 		while ($db->GetRecord())
 		{
+			if ($this->interuptTable($db->Record))
+			{
+				continue;
+			}
+
 			$sirh = '';
 			$fnclass = $this->fnclass;
 			$trclass = isset($this->fnclass{3}) ? ' class="' . $fnclass($db->Record) . '"' : '';
@@ -284,11 +299,11 @@ class Tabelar
 			isset($funcbefore{2}) ? $funcbefore($db->Record, $this) : '';
 			$trattr = $this->trattr;
 			$sir .= '<tr ' . $trclass . $trattr . '>';
+
 			foreach ($this->campuri as $k => $camp)
 			{
 				if (!in_array($k, $this->hideColumns))
 				{
-
 					if (isset($this->fcampuri[$k]) && function_exists($this->fcampuri[$k]))
 					{
 						$data = $this->fcampuri[$k]($db->Record, $this, $k);
@@ -318,7 +333,6 @@ class Tabelar
 		}
 		$this->theads = $sirh;
 		$this->tbodys = $sir;
-		// return $sql;
 	}
 
 	public function getThead()
@@ -341,6 +355,7 @@ class Tabelar
 		}
 
 		$text = '<thead><tr>' . $this->theads . '</tr></thead>';
+
 		return $text;
 	}
 
@@ -367,13 +382,18 @@ class Tabelar
 		echo $this->getPaginator();
 	}
 
+	public function interuptTable($d)
+	{
+		return ($d[0] % 3);
+	}
+
 	public function showTable()
 	{
 		echo $this->get_showTable();
 	}
-	
+
 	public function tb_nr($d, $t, $k)
 	{
-		return $this->nr++; 
+		return $this->nr++;
 	}
 }
