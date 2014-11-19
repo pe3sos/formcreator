@@ -229,9 +229,9 @@ class Tabelar
 
 			$link = $this->getlink();
 
-			$filter = '<form action="' . $link . '" method="post" class="tabelar form" >' . $c . '
-<span class="submitb"><input type="submit" value="Cauta" /></span>
-</form>';
+			$filter = '<form action="' . $link . '" method="post" class="tabelar form" >' . $c .
+				'<span class="submitb"><input type="submit" value="Cauta" /></span>'.
+				'</form>';
 		}
 		return $filter;
 	}
