@@ -83,11 +83,11 @@ class Tabelar
 
 	public function cautare($id, $arr, $sep, $titlu)
 	{
-		$this->cautare = array($id => $titlu);
+		$this->cautare = [$id => $titlu];
 
-		$this->filtre[] = $this->filtre + array('id' => $id, 'filtru' => $arr, 'sep' => $sep, 'titlu' => $titlu);
+		$this->filtre[] = $this->filtre + ['id' => $id, 'filtru' => $arr, 'sep' => $sep, 'titlu' => $titlu];
 
-		$sql = array();
+		$sql = [];
 
 		foreach ($this->filtre as $filtru)
 		{
@@ -113,7 +113,7 @@ class Tabelar
 
 	public function hideColumns($hideColumns)
 	{
-		$this->hideColumns = is_array($hideColumns) ? $hideColumns : array($hideColumns);
+		$this->hideColumns = is_array($hideColumns) ? $hideColumns : [$hideColumns];
 	}
 
 	public function fcautare($arr)
@@ -192,10 +192,10 @@ class Tabelar
 	{
 		if (!isset($arr['-1']{0}))
 		{
-			$this->campuri = array('-1' => 'nr');
-			$this->fcampuri = array('-1' => 'tb_nr');
-			$this->captabel = array('-1' => 'Nr.');
-			$this->clase = array('-1' => 'c');
+			$this->campuri = ['-1' => 'nr'];
+			$this->fcampuri = ['-1' => 'tb_nr'];
+			$this->captabel = ['-1' => 'Nr.'];
+			$this->clase = ['-1' => 'c'];
 		}
 		$this->campuri = $this->campuri + $arr;
 
@@ -230,7 +230,7 @@ class Tabelar
 			$link = $this->getlink();
 
 			$filter = '<form action="' . $link . '" method="post" class="tabelar form" >' . $c .
-				'<span class="submitb"><input type="submit" value="Cauta" /></span>'.
+				'<span class="submitb"><input type="submit" value="Cauta" /></span>' .
 				'</form>';
 		}
 		return $filter;
@@ -282,7 +282,8 @@ class Tabelar
 		$db = $this->db;
 		$db->debug = $this->debug;
 		$sql = $this->getsql();
-		$sir = $sirh = '';
+		$sir = '';
+		$sirh = '';
 		$db->Execute($sql);
 		$nr = $this->nr;
 		while ($db->GetRecord())
@@ -302,30 +303,7 @@ class Tabelar
 
 			foreach ($this->campuri as $k => $camp)
 			{
-				if (!in_array($k, $this->hideColumns))
-				{
-					if (isset($this->fcampuri[$k]) && function_exists($this->fcampuri[$k]))
-					{
-						$data = $this->fcampuri[$k]($db->Record, $this, $k);
-					}
-					elseif (isset($this->fcampuri[$k]) && method_exists($this, $this->fcampuri[$k]))
-					{
-						$data = $this->{$this->fcampuri[$k]}($db->Record, $this, $k);
-					}
-					elseif (isset($db->Record[$camp]))
-					{
-						$data = $db->Record[$camp];
-					}
-					else
-					{
-						$data = '';
-					}
-					$cdata = isset($this->captabel[$k]{0}) ? $this->captabel[$k] : $camp;
-					$class = isset($this->clase[$k]) ? ' class="' . $this->clase[$k] . '"' : '';
-
-					$sirh .= '<td ' . $class . '>' . $cdata . '</td>';
-					$sir .= '<td ' . $class . '>' . $data . '</td>';
-				}
+				$this->processCell($k, $camp);
 			}
 
 			$sir .= '</tr>';
@@ -333,6 +311,35 @@ class Tabelar
 		}
 		$this->theads = $sirh;
 		$this->tbodys = $sir;
+	}
+
+	public function processCell($k, $camp)
+	{
+		if (!in_array($k, $this->hideColumns))
+		{
+			if (isset($this->fcampuri[$k]) && function_exists($this->fcampuri[$k]))
+			{
+				$data = $this->fcampuri[$k]($db->Record, $this, $k);
+			}
+			elseif (isset($this->fcampuri[$k]) && method_exists($this, $this->fcampuri[$k]))
+			{
+				$data = $this->{$this->fcampuri[$k]}($db->Record, $this, $k);
+			}
+			elseif (isset($db->Record[$camp]))
+			{
+				$data = $db->Record[$camp];
+			}
+			else
+			{
+				$data = '';
+			}
+
+			$cdata = isset($this->captabel[$k]{0}) ? $this->captabel[$k] : $camp;
+			$class = isset($this->clase[$k]) ? ' class="' . $this->clase[$k] . '"' : '';
+
+			$sirh .= '<td ' . $class . '>' . $cdata . '</td>';
+			$sir .= '<td ' . $class . '>' . $data . '</td>';
+		}
 	}
 
 	public function getThead()
@@ -344,7 +351,6 @@ class Tabelar
 			{
 				if (!in_array($k, $this->hideColumns))
 				{
-
 					$cdata = isset($this->captabel[$k]{0}) ? $this->captabel[$k] : $camp;
 					$class = isset($this->clase[$k]) ? ' class="' . $this->clase[$k] . '"' : '';
 
