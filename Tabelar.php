@@ -1,10 +1,10 @@
 <?php
-
 /**
  * Created by Petre Sosa.
  * Autor URI: www.sosa.ro
  * Date: 4:32 PM, 6/18/14
  */
+
 class Tabelar
 {
 	public $sql = '';
@@ -108,7 +108,7 @@ class Tabelar
 				}
 			}
 		}
-		$this->wheresql = join('', $sql);
+		$this->wheresql = implode('', $sql);
 	}
 
 	public function hideColumns($hideColumns)
@@ -132,7 +132,7 @@ class Tabelar
 
 	public function grupare($grupare)
 	{
-		$this->grupare = ' group by ' . join(',', $grupare);
+		$this->grupare = ' group by ' . implode(',', $grupare);
 		return $this->grupare;
 	}
 
@@ -143,7 +143,7 @@ class Tabelar
 
 	public function ordonare($ordonare)
 	{
-		$this->ordonare = ' order by ' . join(',', $ordonare);
+		$this->ordonare = ' order by ' . implode(',', $ordonare);
 
 		return $this->ordonare;
 	}
@@ -249,19 +249,26 @@ class Tabelar
 		return false;
 	}
 
+	private function paginator()
+	{
+		return '';
+	}
+
 	public function getPaginator()
 	{
 		$randuri = $this->GetTotalRows();
 		if ($randuri > $this->limit)
 		{
-			return paginator(
+			return $this->paginator(
 				$randuri,
 				$this->pagenr,
 				$this->limit,
 				$this->getlink() . $this->pagesuf . $this->page . '=',
-				$endpag = ""
+				$endpag = ''
 			);
 		}
+
+		return;
 	}
 
 	public function setRowClass($fnclass)
@@ -398,6 +405,7 @@ class Tabelar
 		echo $this->get_showTable();
 	}
 
+	//Tabelar function should start with tb_ prefix
 	public function tb_nr($d, $t, $k)
 	{
 		return $this->nr++;
